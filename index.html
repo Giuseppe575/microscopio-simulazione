@@ -1,40 +1,25 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Simulazione Microscopica Interattiva</title>
+  <title>Microscopic Interactive Particles</title>
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/addons/p5.sound.min.js"></script>
 </head>
 <body>
   <script>
     let particles = [];
-    let bgImg;
-    let ambientSound;
-
-    function preload() {
-      bgImg = loadImage("background.jpg"); // Assicurati che il file sia nella stessa cartella
-      ambientSound = loadSound("ambient.mp3"); // Assicurati che il file sia nella stessa cartella
-    }
 
     function setup() {
       createCanvas(600, 600);
-      imageMode(CENTER);
       background(0);
       noStroke();
       for (let i = 0; i < 120; i++) {
         particles.push(new Particle());
       }
-      if (ambientSound && !ambientSound.isPlaying()) {
-        ambientSound.setVolume(0.3);
-        ambientSound.loop();
-      }
     }
 
     function draw() {
-      image(bgImg, width / 2, height / 2, width, height);
-      fill(0, 50); // leggera velatura
-      rect(0, 0, width, height);
+      background(0, 10); // Trail effect
       for (let p of particles) {
         p.update();
         p.interact(mouseX, mouseY);
@@ -49,11 +34,15 @@
         this.size = random(6, 18);
         this.brightness = random(60, 100);
         this.colorShift = random(360);
+        this.vibration = p5.Vector.random2D().mult(0.5);
       }
 
       update() {
         this.pos.add(this.vel);
+        // Vibrazione interna
         this.pos.add(p5.Vector.random2D().mult(0.3));
+
+        // Bounce
         if (this.pos.x < 0 || this.pos.x > width) this.vel.x *= -1;
         if (this.pos.y < 0 || this.pos.y > height) this.vel.y *= -1;
       }
